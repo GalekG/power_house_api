@@ -82,5 +82,3 @@ A continuación se describen los endpoints disponibles en este proyecto:
 - **Ruta:** `/machines/<int:machine_id>/delete/`
 - **Método:** DELETE
 - **Descripción:** Elimina una máquina por su ID.
-
-Asegúrate de configurar tus vistas y rutas de Django de acuerdo con esta documentación. Además, puedes proporcionar detalles adicionales sobre la autenticación y los parámetros que aceptan estos endpoints si es necesario.
