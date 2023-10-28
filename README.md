@@ -29,6 +29,12 @@ pip install Django==4.2.6
 
 A continuación se describen los endpoints disponibles en este proyecto:
 
+## Login
+
+- **Ruta:** `/auth/login`
+- **Método:** POST
+- **Descripción:** Ruta de autenticación.
+
 ## Usuarios
 
 ### Listar Usuarios
