@@ -1,18 +1,26 @@
+import hashlib
+import json
+
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from gym.models import Users, Roles, UserRoles
-import hashlib
-import json
+
+from gym.decorators import protected_endpoint
 
 # Vista para listar todos los usuarios (operación de lectura)
+@protected_endpoint
 def user_list(request):
-  if request.method == 'GET':
-    users = Users.objects.all()
-    data = [model_to_dict(user) for user in users]
-    return JsonResponse(data, safe=False)
-  
-  return JsonResponse({'message': 'Método no permitido'}, status=405)
+    if request.method == 'GET':
+          users = Users.objects.all().values()  # Obtener los valores de la consulta en forma de diccionarios
+          data = []
+          for user in users:
+              # Excluir el campo 'password' si existe en el diccionario del usuario
+              if 'password' in user:
+                  del user['password']
+              data.append(user)
+          return JsonResponse(data, safe=False)
+    return JsonResponse({'message': 'Método no permitido'}, status=405)
 
 # Vista para crear un nuevo usuario (operación de creación)
 @csrf_exempt
