@@ -1,13 +1,11 @@
 from django.db import models
 from power_house.models import BaseModel
 
-class Genders(BaseModel):
-    name = models.CharField(max_length=25)
-
-    class Meta:
-        db_table = 'Genders'
-
 class Users(BaseModel):
+    class GENDERS(models.TextChoices):
+        HOMBRE = '1', ('Hombre')
+        MUJER = '2', ('Mujer')
+
     username = models.CharField(max_length=50)
     password = models.CharField(max_length=255, null=True, blank=True)
     identification = models.CharField(max_length=25)
@@ -19,7 +17,7 @@ class Users(BaseModel):
     weight = models.IntegerField()
     height = models.IntegerField()
     bloodType = models.CharField(max_length=5, null=True)
-    genderId = models.ForeignKey(Genders, on_delete=models.CASCADE, null=True, blank=True, db_column='genderId')
+    gender = models.CharField(max_length=15 , choices=GENDERS.choices)
 
     class Meta:
         db_table = 'Users'
@@ -37,12 +35,6 @@ class UserRoles(BaseModel):
 
     class Meta:
         db_table = 'UserRoles'
-
-class DaysOfWeek(BaseModel):
-    name = models.CharField(max_length=10)
-
-    class Meta:
-        db_table = 'DaysOfWeek'
 
 class Exercises(BaseModel):
     name = models.CharField(max_length=25)
@@ -78,9 +70,18 @@ class Routines(BaseModel):
         db_table = 'Routines'
 
 class RoutineSchedules(BaseModel):
+    class DAYS_OF_WEEK(models.TextChoices):
+        MONDAY = '1', ('Lunes')
+        TUESDAY = '2', ('Martes')
+        THURSDAY = '3', ('Miércoles')
+        WEDNESDAY = '4', ('Jueves')
+        FRIDAY = '5', ('Viernes')
+        SATURDAY = '6', ('Sábado')
+        SUNDAY = '7', ('Domingo')
+
     userId = models.ForeignKey(Users, on_delete=models.CASCADE, null=False, blank=False, db_column='userId')
     routineId = models.ForeignKey(Routines, on_delete=models.CASCADE, null=False, blank=False, db_column='routineId')
-    dayOfWeekId = models.ForeignKey(DaysOfWeek, on_delete=models.CASCADE, null=False, blank=False, db_column='dayOfWeekId')
+    dayOfWeek = models.CharField(max_length=15, choices=DAYS_OF_WEEK.choices, null=False, blank=False)
 
     class Meta:
         db_table = 'RoutineSchedules'
@@ -105,5 +106,3 @@ class Transactions(BaseModel):
 
     class Meta:
         db_table = 'Transactions'
-
-

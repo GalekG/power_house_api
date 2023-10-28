@@ -56,6 +56,33 @@ A continuación se describen los endpoints disponibles en este proyecto:
 - **Método:** DELETE
 - **Descripción:** Elimina un usuario por su ID.
 
+## Roles
+
+### Listar Roles
+- **Ruta:** `/roles/`
+- **Método:** GET
+- **Descripción:** Obtiene una lista de todos los roles.
+
+### Crear Rol
+- **Ruta:** `/roles/create/`
+- **Método:** POST
+- **Descripción:** Crea un nuevo rol.
+
+### Obtener Rol por ID
+- **Ruta:** `/roles/<int:role_id>/`
+- **Método:** GET
+- **Descripción:** Obtiene los detalles de un rol por su ID.
+
+### Actualizar Rol
+- **Ruta:** `/roles/<int:role_id>/update/`
+- **Método:** PUT
+- **Descripción:** Actualiza la información de un rol existente.
+
+### Eliminar Rol
+- **Ruta:** `/roles/<int:role_id>/delete/`
+- **Método:** DELETE
+- **Descripción:** Elimina un rol por su ID.
+
 ## Máquinas
 
 ### Listar Máquinas
@@ -82,3 +109,84 @@ A continuación se describen los endpoints disponibles en este proyecto:
 - **Ruta:** `/machines/<int:machine_id>/delete/`
 - **Método:** DELETE
 - **Descripción:** Elimina una máquina por su ID.
+
+## Ejercicios
+
+### Listar Ejercicios
+- **Ruta:** `/exercises/`
+- **Método:** GET
+- **Descripción:** Obtiene una lista de todos los ejercicios.
+
+### Crear Ejercicio
+- **Ruta:** `/exercises/create/`
+- **Método:** POST
+- **Descripción:** Crea un nuevo ejercicio.
+
+### Obtener Ejercicio por ID
+- **Ruta:** `/exercises/<int:exercise_id>/`
+- **Método:** GET
+- **Descripción:** Obtiene los detalles de un ejercicio por su ID.
+
+### Actualizar Ejercicio
+- **Ruta:** `/exercises/<int:exercise_id>/update/`
+- **Método:** PUT
+- **Descripción:** Actualiza la información de un ejercicio existente.
+
+### Eliminar Ejercicio
+- **Ruta:** `/exercises/<int:exercise_id>/delete/`
+- **Método:** DELETE
+- **Descripción:** Elimina un ejercicio por su ID.
+
+## Rutinas
+
+### Listar Rutinas
+- **Ruta:** `/routines/`
+- **Método:** GET
+- **Descripción:** Obtiene una lista de todas las rutinas.
+
+### Crear Rutina
+- **Ruta:** `/routines/create/`
+- **Método:** POST
+- **Descripción:** Crea una nueva rutina.
+
+### Obtener Rutina por ID
+- **Ruta:** `/routines/<int:routine_id>/`
+- **Método:** GET
+- **Descripción:** Obtiene los detalles de una rutina por su ID.
+
+### Actualizar Rutina
+- **Ruta:** `/routines/<int:routine_id>/update/`
+- **Método:** PUT
+- **Descripción:** Actualiza la información de una rutina existente.
+
+### Eliminar Rutina
+- **Ruta:** `/routines/<int:routine_id>/delete/`
+- **Método:** DELETE
+- **Descripción:** Elimina una rutina por su ID.
+
+## Horarios de Rutinas
+
+### Listar Horarios de Rutinas
+- **Ruta:** `/routineSchedules/`
+- **Método:** GET
+- **Descripción:** Obtiene una lista de todos los horarios de rutinas.
+
+### Crear Horario de Rutina
+- **Ruta:** `/routineSchedules/create/`
+- **Método:** POST
+- **Descripción:** Crea un nuevo horario de rutina.
+
+### Obtener Horario de Rutina por ID
+- **Ruta:** `/routineSchedules/<int:routine_id>/`
+- **Método:** GET
+- **Descripción:** Obtiene los detalles de un horario de rutina por su ID.
+
+### Actualizar Horario de Rutina
+- **Ruta:** `/routineSchedules/<int:routine_id>/update/`
+- **Método:** PUT
+- **Descripción:** Actualiza la información de un horario de rutina existente.
+
+### Eliminar Horario de Rutina
+- **Ruta:** `/routineSchedules/<int:routine_id>/delete/`
+- **Método:** DELETE
+- **Descripción:** Elimina un horario de rutina por su ID.

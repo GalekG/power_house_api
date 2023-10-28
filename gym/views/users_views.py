@@ -1,7 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
-from gym.models import Users, Roles, UserRoles,Genders
+from gym.models import Users, Roles, UserRoles
 import hashlib
 import json
 
@@ -37,7 +37,7 @@ def create_user(request):
         weight=user_data['weight'],
         height=user_data['height'],
         bloodType=user_data['bloodType'],
-        genderId=Genders.objects.get(pk=user_data['genderId'])
+        gender=user_data['gender']
       )
 
       if 'password' in user_data:
@@ -112,8 +112,8 @@ def update_user(request, user_id):
             user.height = user_data['height']
         if 'bloodType' in user_data:
             user.bloodType = user_data['bloodType']
-        if 'genderId' in user_data:
-            user.genderId = Genders.objects.get(pk=user_data['genderId'])
+        if 'gender' in user_data:
+            user.gender = user_data['gender']
         
         if 'password' in user_data:
             password = user_data['password']
