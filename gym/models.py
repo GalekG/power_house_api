@@ -49,6 +49,7 @@ class Machines(BaseModel):
     description = models.TextField(null=True)
     muscleGroup = models.CharField(max_length=30)
     quantity = models.IntegerField(default=1)
+    image = models.BinaryField(null=True, blank=True)
 
     class Meta:
         db_table = 'Machines'
