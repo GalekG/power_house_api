@@ -8,11 +8,11 @@ class Users(BaseModel):
 
     username = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=255, null=True, blank=True)
-    identification = models.CharField(max_length=25)
+    identification = models.CharField(max_length=25, unique=True)
     names = models.CharField(max_length=50)
     lastnames = models.CharField(max_length=50)
     birthdate = models.DateField()
-    email = models.CharField(max_length=50, null=True)
+    email = models.CharField(max_length=50, null=True, unique=True)
     address = models.CharField(max_length=50, null=True)
     weight = models.IntegerField()
     height = models.IntegerField()
