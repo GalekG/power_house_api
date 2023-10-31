@@ -6,7 +6,7 @@ class Users(BaseModel):
         HOMBRE = '1', ('Hombre')
         MUJER = '2', ('Mujer')
 
-    username = models.CharField(max_length=50)
+    username = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=255, null=True, blank=True)
     identification = models.CharField(max_length=25)
     names = models.CharField(max_length=50)

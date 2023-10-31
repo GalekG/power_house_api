@@ -5,6 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from gym.models import Users, Roles, UserRoles
+from django.db import IntegrityError
+
 
 from gym.decorators import protected_endpoint
 
@@ -32,7 +34,7 @@ def create_user(request):
     try:
       # Analizar el JSON en un diccionario
       user_data = json.loads(request_body)
-
+        
       # Crear un nuevo usuario a partir de los datos
       new_user = Users(
         username=user_data['username'],
@@ -65,6 +67,8 @@ def create_user(request):
       return JsonResponse({'message': 'Error al analizar los datos JSON'}, status=400)
     except KeyError:
       return JsonResponse({'message': 'Faltan campos requeridos en los datos JSON'}, status=400)
+    except IntegrityError:
+      return JsonResponse({'message': 'Ya existe un usuario con ese username'}, status=400)
 
   return JsonResponse({'message': 'Método no permitido'}, status=405)
 
