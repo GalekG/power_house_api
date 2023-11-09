@@ -39,6 +39,7 @@ urlpatterns = [
     path('routines/<int:routine_id>/delete/', routines_views.delete_routine, name='routines.delete'),
 
     path('routineSchedules/', routineSchedules_views.routine_schedules_list, name='routineSchedules.list'),
+    path('routineSchedules/<int:people_id>/', routineSchedules_views.routine_schedules_by_people_id, name='routineSchedules.getByPeopleId'),
     path('routineSchedules/create/', routineSchedules_views.create_routine_schedule, name='routineSchedules.create'),
     path('routineSchedules/<int:routine_id>/', routineSchedules_views.routine_schedule_detail, name='routineSchedules.getById'),
     path('routineSchedules/<int:routine_id>/update/', routineSchedules_views.update_routine_schedule, name='routineSchedules.update'),
