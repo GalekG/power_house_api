@@ -104,16 +104,10 @@ class RoutinesExercises(BaseModel):
 
     class Meta:
         db_table = 'RoutinesExercises'
-
-class Memberships(BaseModel):
-    userId = models.ForeignKey(Users, on_delete=models.CASCADE, null=False, blank=False, db_column='userId')
-    class Meta:
-        db_table = 'Memberships'
-
 class Transactions(BaseModel):
-    membershipId = models.ForeignKey(Memberships, on_delete=models.CASCADE, null=False, blank=False, db_column='membershipId')
-    startDate = models.DateTimeField()
-    endDate = models.DateTimeField()
+    peopleId = models.ForeignKey(People, on_delete=models.CASCADE, null=False, blank=False, db_column='peopleId')
+    startDate = models.DateField()
+    endDate = models.DateField()
     value = models.FloatField(null=True)
 
     class Meta:
