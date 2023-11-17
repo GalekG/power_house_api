@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'rest_framework',
+    'drf_yasg',
     'gym'
 ]
 
@@ -50,7 +52,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -81,6 +84,24 @@ TEMPLATES = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+}
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+        },
+    },
+    'DEFAULT_VERSION': '3.0.0',
+}
+
 WSGI_APPLICATION = 'power_house.wsgi.application'
 
 
@@ -92,7 +113,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'power_house',
         'USER': 'root',
-        'PASSWORD': 'root',
         'HOST': '127.0.0.1',
         'PORT': '3306'
     }
@@ -141,3 +161,15 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
+
+STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
+STATIC_TMP=os.path.join(BASE_DIR,'static')
+
+os.makedirs(STATIC_TMP, exist_ok=True)
+os.makedirs(STATIC_ROOT, exist_ok=True)
+
+STATICFILES_DIRS=(
+    os.path.join(BASE_DIR,'static'),
+)
+STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage'
+STATIC_URL = '/static/'

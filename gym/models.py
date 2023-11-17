@@ -4,6 +4,7 @@ from power_house.models import BaseModel
 class Users(BaseModel):
     username = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=255, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'Users'
@@ -11,8 +12,9 @@ class Users(BaseModel):
 class People(BaseModel):
 
     class GENDERS(models.TextChoices):
-            HOMBRE = '1', ('Hombre')
-            MUJER = '2', ('Mujer')
+            HOMBRE = 'Hombre', ('Hombre')
+            MUJER = 'Mujer', ('Mujer')
+            OTRO = 'Otro', ('Otro')
 
     userId = models.ForeignKey(Users, on_delete=models.CASCADE, null=False, blank=False, db_column='userId')
     identification = models.CharField(max_length=25, unique=True)
@@ -83,13 +85,13 @@ class Routines(BaseModel):
 
 class RoutineSchedules(BaseModel):
     class DAYS_OF_WEEK(models.TextChoices):
-        MONDAY = '1', ('Lunes')
-        TUESDAY = '2', ('Martes')
-        THURSDAY = '3', ('Miércoles')
-        WEDNESDAY = '4', ('Jueves')
-        FRIDAY = '5', ('Viernes')
-        SATURDAY = '6', ('Sábado')
-        SUNDAY = '7', ('Domingo')
+        MONDAY = 'Lunes', ('Lunes')
+        TUESDAY = 'Martes', ('Martes')
+        THURSDAY = 'Miércoles', ('Miércoles')
+        WEDNESDAY = 'Jueves', ('Jueves')
+        FRIDAY = 'Viernes', ('Viernes')
+        SATURDAY = 'Sábado', ('Sábado')
+        SUNDAY = 'Domingo', ('Domingo')
 
     peopleId = models.ForeignKey(People, on_delete=models.CASCADE, null=False, blank=False, db_column='peopleId')
     routineId = models.ForeignKey(Routines, on_delete=models.CASCADE, null=False, blank=False, db_column='routineId')
