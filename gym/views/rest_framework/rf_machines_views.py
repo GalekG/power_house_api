@@ -1,13 +1,19 @@
 import json
-
+from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import status
+from rest_framework import generics
 from PIL import Image
 from io import BytesIO
-from rest_framework import generics
-from gym.models import Machines
 from gym.serializers import MachineSerializer
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.response import Response
-from rest_framework import status
+from gym.models import Machines
+from enum import Enum
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from django.db.models import Count, Q
+from django.http import Http404
+
 
 class MachinesListView(generics.ListAPIView):
     queryset = Machines.objects.all()
@@ -17,6 +23,75 @@ class MachinesListView(generics.ListAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class CustomPageNumberPagination(PageNumberPagination):
+    page_size_query_param = 'perPage'
+
+class OrderEnum(Enum):
+    ASC = 'asc'
+    DESC = 'desc'
+
+class MachinesListPaginatedView(generics.ListAPIView):
+    queryset = Machines.objects.all()
+    serializer_class = MachineSerializer
+    pagination_class = CustomPageNumberPagination
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('page', openapi.IN_QUERY, description="Número de página", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('perPage', openapi.IN_QUERY, description="Cantidad de items por página", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('sort', openapi.IN_QUERY, description="Campo por el cual ordenar", type=openapi.TYPE_STRING),
+            openapi.Parameter('order', openapi.IN_QUERY, description="Orden ascendente ('asc') o descendente ('desc')", type=openapi.TYPE_STRING, enum=list(OrderEnum), default=OrderEnum.ASC),
+            openapi.Parameter('search', openapi.IN_QUERY, description="Búsqueda por nombres o grupo muscular", type=openapi.TYPE_STRING),
+
+        ],
+        responses={status.HTTP_200_OK: MachineSerializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        page = self.request.query_params.get('page', 1)
+        per_page = self.request.query_params.get('perPage', 10)
+        sort_by = self.request.query_params.get('sort', 'id')
+        order = self.request.query_params.get('order', 'asc')
+        search_query = self.request.query_params.get('search', '')
+
+        try:
+            page = int(page)
+            per_page = int(per_page)
+        except ValueError:
+            return Response({"error": "Los parámetros 'page' y 'perPage' deben ser enteros"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        queryset = self.get_queryset()
+
+        if order.lower() not in ['asc', 'desc']:
+            return Response({"error": "El parámetro 'order' debe ser 'asc' o 'desc'"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if order.lower() == 'desc':
+            sort_by = '-' + sort_by
+        
+        queryset = queryset.order_by(sort_by)
+        if search_query:
+            queryset = queryset.filter(
+                Q(name__icontains=search_query) |
+                Q(muscleGroup__icontains=search_query)
+            )
+        
+        self.pagination_class.page_size = per_page  # CORREGIR AQUÍ
+        queryset = self.filter_queryset(queryset)
+        page_data = self.paginate_queryset(queryset)
+
+        if page and not page_data:
+            raise Http404("No se encontró la página")
+
+        serializer = self.get_serializer(page_data, many=True)
+
+        response_data = {
+            'total': queryset.aggregate(total=Count('id'))['total'],
+            'page': page,
+            'perPage': per_page,
+            'data': serializer.data
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
 class MachineDetailView(generics.RetrieveAPIView):
     queryset = Machines.objects.all()

@@ -6,6 +6,9 @@ class Users(BaseModel):
     password = models.CharField(max_length=255, null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
+    def people(self):
+        return self.people_set.first()
+
     class Meta:
         db_table = 'Users'
 
@@ -16,7 +19,7 @@ class People(BaseModel):
             MUJER = 'Mujer', ('Mujer')
             OTRO = 'Otro', ('Otro')
 
-    userId = models.ForeignKey(Users, on_delete=models.CASCADE, null=False, blank=False, db_column='userId')
+    userId = models.ForeignKey(Users, on_delete=models.CASCADE, null=True, blank=True, db_column='userId')
     identification = models.CharField(max_length=25, unique=True)
     names = models.CharField(max_length=50)
     lastnames = models.CharField(max_length=50)
@@ -58,7 +61,7 @@ class Exercises(BaseModel):
 
 class Machines(BaseModel):
     name = models.CharField(max_length=25)
-    description = models.TextField(null=True)
+    description = models.TextField(null=True, blank=True)
     muscleGroup = models.CharField(max_length=30)
     quantity = models.IntegerField(default=1)
     image = models.BinaryField(null=True, blank=True)

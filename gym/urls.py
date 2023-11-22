@@ -3,6 +3,7 @@ from gym.views.rest_framework import rf_exercises_views, rf_login_view, rf_machi
 
 urlpatterns = [
     path('users/', rf_users_views.UsersListView.as_view(), name='users.list'),
+    path('users/paginated/', rf_users_views.UsersListPaginatedView.as_view(), name='users.list.paginated'),
     path('users/<int:pk>/', rf_users_views.UserDetailView.as_view(), name='users.detail'),
     path('users/create/', rf_users_views.UserCreateView.as_view(), name='users.create'),
     path('users/<int:pk>/update/', rf_users_views.UserUpdateView.as_view(), name='users.update'),
@@ -14,6 +15,7 @@ urlpatterns = [
     path('auth/login', rf_login_view.LoginView.as_view(), name='login'),
 
     path('machines/', rf_machines_views.MachinesListView.as_view(), name='machines.list'),
+    path('machines/paginated/', rf_machines_views.MachinesListPaginatedView.as_view(), name='machines.list.paginated'),
     path('machines/<int:pk>/', rf_machines_views.MachineDetailView.as_view(), name='machines.detail'),
     path('machines/create/', rf_machines_views.MachineCreateView.as_view(), name='machines.create'),
     path('machines/<int:pk>/update/', rf_machines_views.MachineUpdateView.as_view(), name='machines.update'),

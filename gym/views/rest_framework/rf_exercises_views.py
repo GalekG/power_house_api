@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from gym.models import Exercises, Machines, ExerciseMachines
-from gym.serializers import ExerciseSerializer
+from gym.serializers import ExerciseSerializer, ExcersiseCreateSerializer
 
 class ExerciseListView(generics.ListAPIView):
     queryset = Exercises.objects.all()
@@ -29,7 +29,7 @@ class ExerciseDetailView(generics.RetrieveAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ExerciseCreateView(generics.CreateAPIView):
-    serializer_class = ExerciseSerializer
+    serializer_class = ExcersiseCreateSerializer
     parser_classes = [MultiPartParser, FormParser]
 
     def create(self, request, *args, **kwargs):
@@ -37,7 +37,7 @@ class ExerciseCreateView(generics.CreateAPIView):
         machines_ids = json.loads(request.data.get('machines', []))
         image = request.FILES.get('image', None)
         
-        serializer = self.get_serializer(data=exercise_data)
+        serializer = ExerciseSerializer(data=exercise_data)
         serializer.is_valid(raise_exception=True)
 
         exercise = serializer.save()
