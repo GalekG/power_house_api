@@ -60,7 +60,7 @@ class Exercises(BaseModel):
         db_table = 'Exercises'
 
 class Machines(BaseModel):
-    name = models.CharField(max_length=25)
+    name = models.CharField(max_length=25, unique=True)
     description = models.TextField(null=True, blank=True)
     muscleGroup = models.CharField(max_length=30)
     quantity = models.IntegerField(default=1)
@@ -113,7 +113,7 @@ class Transactions(BaseModel):
     peopleId = models.ForeignKey(People, on_delete=models.CASCADE, null=False, blank=False, db_column='peopleId')
     startDate = models.DateField()
     endDate = models.DateField()
-    value = models.FloatField(null=True)
+    value = models.FloatField()
 
     class Meta:
         db_table = 'Transactions'

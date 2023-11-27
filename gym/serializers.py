@@ -59,8 +59,7 @@ class PeopleSerializer(BaseSerializer):
         fields = '__all__'
 
 class UserSerializer(BaseSerializer):
-    peopleSerializer = PeopleSerializer
-    people = peopleSerializer(source='userId', read_only=True)
+    people = PeopleSerializer(source='userId', read_only=True)
 
     def get_people(self, instance):
         people = People.objects.filter(userId=instance).first()
@@ -109,17 +108,24 @@ class RoutineExerciseSerializer:
 
 class RoutineSerializer(BaseSerializer):
     def to_representation(self, instance):
-        presentation = super().to_representation(instance)
+        representation = super().to_representation(instance)
         routine_exercises = RoutinesExercises.objects.filter(routineId=instance)
         exercises = [routine_exercise.exerciseId for routine_exercise in routine_exercises]
-        presentation['exercises'] = ExerciseSerializer(exercises, many=True).data
-        return presentation
+        representation['exercises'] = ExerciseSerializer(exercises, many=True).data
+        return representation
 
     class Meta:
         model = Routines
         fields = '__all__'
 
 class RoutineScheduleSerializer(BaseSerializer):
+    routine = RoutineSerializer(read_only=True)
+
+    def to_representation(self, instance):
+        representation =  super().to_representation(instance)
+        routine = Routines.objects.filter(pk=instance.routineId.id).first()
+        representation['routine'] = RoutineSerializer(routine, many=False).data if routine else {}
+        return representation
     class Meta:
         model = RoutineSchedules
         fields = '__all__'
@@ -149,7 +155,6 @@ class UserCreationSerializer(serializers.Serializer):
             "title": "UserCreation",
             "properties": {
                 "user": openapi.Schema(
-                    title="User Data",
                     type=openapi.TYPE_OBJECT,
                     properties={
                         "username": openapi.Schema(
@@ -169,7 +174,6 @@ class UserCreationSerializer(serializers.Serializer):
                     required=["username", "password"],
                 ),
                 "people": openapi.Schema(
-                    title="People Data",
                     type=openapi.TYPE_OBJECT,
                     properties={
                         "userId": openapi.Schema(

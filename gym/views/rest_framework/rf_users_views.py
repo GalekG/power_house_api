@@ -1,15 +1,15 @@
 import json
 import hashlib
+import base64
 
 from datetime import datetime, timezone
-from enum import Enum
 from PIL import Image
 from io import BytesIO
 from rest_framework import generics
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.pagination import PageNumberPagination
+from gym.utils.pagination_utils import CustomPageNumberPagination, OrderEnum, PaymentEnum
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.db.models import Count, Q
@@ -17,6 +17,9 @@ from django.http import Http404
 
 from gym.models import Users, People, Roles
 from gym.serializers import UserSerializer, PeopleSerializer, UserCreationSerializer, UserRoleSerializer
+
+from django.forms.models import model_to_dict
+
 
 class UsersListView(generics.ListAPIView):
     queryset = Users.objects.all()
@@ -26,18 +29,6 @@ class UsersListView(generics.ListAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class CustomPageNumberPagination(PageNumberPagination):
-    page_size_query_param = 'perPage'
-
-class OrderEnum(Enum):
-    ASC = 'asc'
-    DESC = 'desc'
-
-class PaymentEnum(Enum):
-    PAGADO = 'Pagado'
-    PENDIENTE = 'Pendiente'
 
 class UsersListPaginatedView(generics.ListAPIView):
     queryset = Users.objects.all()
@@ -158,7 +149,7 @@ class UserCreateView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
 
         people_serializer = PeopleSerializer(data=people_data)
-        people_serializer.is_valid(raise_exception=True)        
+        people_serializer.is_valid(raise_exception=True)
 
         user = serializer.save()
 
@@ -203,7 +194,6 @@ class UserUpdateView(generics.UpdateAPIView):
         people_data = json.loads(request.data.get('people', {}))
         people = People.objects.filter(identification=people_data['identification']).first()
         people_data['userId'] = user.id
-
         people_serializer = PeopleSerializer(people, data=people_data, partial=True)
         people_serializer.is_valid(raise_exception=True)
 
@@ -214,7 +204,7 @@ class UserUpdateView(generics.UpdateAPIView):
             img_bytes_io = BytesIO()
             img = img.convert('RGB')
             img.save(img_bytes_io, format='JPEG')
-            people_serializer.image = img_bytes_io.getvalue()
+            people.image = img_bytes_io.getvalue()
             people.save()
         
         return Response({'message': 'Usuario actualizado', 'id': user.id}, status=status.HTTP_200_OK)

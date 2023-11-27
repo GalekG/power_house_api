@@ -1,18 +1,17 @@
 import json
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 from rest_framework import generics
 from PIL import Image
 from io import BytesIO
+from gym.utils.pagination_utils import CustomPageNumberPagination, OrderEnum
 from gym.serializers import MachineSerializer
 from gym.models import Machines
-from enum import Enum
-from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from django.db.models import Count, Q
+from drf_yasg import openapi
 from django.http import Http404
+from django.db.models import Count, Q
 
 
 class MachinesListView(generics.ListAPIView):
@@ -21,15 +20,12 @@ class MachinesListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
+        muscleGroup = self.request.query_params.get('muscleGroup', '')
+        if muscleGroup:
+            queryset = queryset.filter(Q(muscleGroup=muscleGroup))
+
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-class CustomPageNumberPagination(PageNumberPagination):
-    page_size_query_param = 'perPage'
-
-class OrderEnum(Enum):
-    ASC = 'asc'
-    DESC = 'desc'
 
 class MachinesListPaginatedView(generics.ListAPIView):
     queryset = Machines.objects.all()
@@ -42,7 +38,7 @@ class MachinesListPaginatedView(generics.ListAPIView):
             openapi.Parameter('perPage', openapi.IN_QUERY, description="Cantidad de items por página", type=openapi.TYPE_INTEGER),
             openapi.Parameter('sort', openapi.IN_QUERY, description="Campo por el cual ordenar", type=openapi.TYPE_STRING),
             openapi.Parameter('order', openapi.IN_QUERY, description="Orden ascendente ('asc') o descendente ('desc')", type=openapi.TYPE_STRING, enum=list(OrderEnum), default=OrderEnum.ASC),
-            openapi.Parameter('search', openapi.IN_QUERY, description="Búsqueda por nombres o grupo muscular", type=openapi.TYPE_STRING),
+            openapi.Parameter('search', openapi.IN_QUERY, description="Búsqueda por nombre o grupo muscular", type=openapi.TYPE_STRING),
 
         ],
         responses={status.HTTP_200_OK: MachineSerializer(many=True)}
@@ -75,7 +71,7 @@ class MachinesListPaginatedView(generics.ListAPIView):
                 Q(muscleGroup__icontains=search_query)
             )
         
-        self.pagination_class.page_size = per_page  # CORREGIR AQUÍ
+        self.pagination_class.page_size = per_page
         queryset = self.filter_queryset(queryset)
         page_data = self.paginate_queryset(queryset)
 
