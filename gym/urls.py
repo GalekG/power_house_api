@@ -1,5 +1,5 @@
 from django.urls import path
-from gym.views.rest_framework import rf_exercises_views, rf_login_view, rf_machines_views, rf_people_views, rf_transactions_views, rf_routines_views, rf_routineSchedules_views, rf_users_views
+from gym.views.rest_framework import rf_exercises_views, rf_login_view, rf_machines_views, rf_people_views, rf_transactions_views, rf_routines_views, rf_routineSchedules_views, rf_users_views, rf_maintenances_views
 
 urlpatterns = [
     path('users/', rf_users_views.UsersListView.as_view(), name='users.list'),
@@ -20,6 +20,11 @@ urlpatterns = [
     path('machines/create/', rf_machines_views.MachineCreateView.as_view(), name='machines.create'),
     path('machines/<int:pk>/update/', rf_machines_views.MachineUpdateView.as_view(), name='machines.update'),
     path('machines/<int:pk>/delete/', rf_machines_views.MachineDeleteView.as_view(), name='machines.delete'),
+    
+    path('maintenances/', rf_maintenances_views.MaintenancesListView.as_view(), name='maintenances.list'),
+    path('maintenances/paginated/', rf_maintenances_views.MaintenancesListPaginatedView.as_view(), name='maintenances.list.paginated'),
+    path('maintenances/<int:pk>/', rf_maintenances_views.MaintenanceDetailView.as_view(), name='maintenances.detail'),
+    path('maintenances/create/', rf_maintenances_views.MaintenanceCreateView.as_view(), name='maintenances.create'),
 
     path('exercises/', rf_exercises_views.ExerciseListView.as_view(), name='exercises.list'),
     path('exercises/paginated/', rf_exercises_views.ExerciseListPaginatedView.as_view(), name='exercises.list.paginated'),

@@ -4,7 +4,7 @@ from drf_yasg import openapi
 
 from rest_framework import serializers
 from datetime import timezone, datetime
-from gym.models import Users, People, Exercises, Machines, ExerciseMachines, Transactions, Routines, RoutinesExercises, RoutineSchedules, UserRoles
+from gym.models import Users, People, Exercises, Machines, ExerciseMachines, Transactions, Routines, RoutinesExercises, RoutineSchedules, UserRoles, Maintenances
 from django.core.exceptions import FieldDoesNotExist
 
 class BaseSerializer(serializers.ModelSerializer):
@@ -237,3 +237,8 @@ class UserCreationSerializer(serializers.Serializer):
             "required": ["user", "people"],
         }
 
+
+class MaintenanceSerializer(BaseSerializer):
+    class Meta:
+        model = Maintenances
+        fields = '__all__'

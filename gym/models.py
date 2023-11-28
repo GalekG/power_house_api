@@ -117,3 +117,12 @@ class Transactions(BaseModel):
 
     class Meta:
         db_table = 'Transactions'
+
+class Maintenances(BaseModel):
+    machineId = models.ForeignKey(Machines, on_delete=models.CASCADE, null=False, blank=False, db_column='machineId')
+    startDate = models.DateField()
+    endDate = models.DateField()
+    value = models.FloatField()
+
+    class Meta:
+        db_table = 'Maintenances'
